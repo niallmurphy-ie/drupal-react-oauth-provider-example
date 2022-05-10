@@ -33,7 +33,7 @@ const ProxyLogin = () => {
 						login({
 							username: 'user1',
 							password: '123456',
-							proxyURL: 'http://localhost:789/oauth',
+							proxyURL: 'https://drop-proxy.niallmurphy.dev/oauth',
 						})
 					}
 				>
