@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import {
 	useLazyLogin,
+	useLazyLoginProxy,
 	useLazyLogout,
 	useAuthenticated,
 	useLazyAPI,
@@ -19,10 +20,11 @@ function App() {
 	);
 }
 
-const Login = () => {
-	const [login, { loading, error }] = useLazyLogin();
-	const [logout] = useLazyLogout();
+const ProxyLogin = () => {
+	const [login, { loading, error }] = useLazyLoginProxy();
+
 	const isAuthenticated = useAuthenticated();
+
 	return (
 		<div>
 			{!isAuthenticated && (
@@ -31,15 +33,57 @@ const Login = () => {
 						login({
 							username: 'user1',
 							password: '123456',
-							client_id: '5e6c8415-9a1f-4d8b-9249-72b9dc6f7494',
-							client_secret: 'client_secret_simple_oauth',
-							grant_type: 'password',
-							scope: 'consumer',
+							proxyURL: 'http://localhost:789/oauth',
 						})
 					}
 				>
-					Login
+					Proxy Login
 				</button>
+			)}
+		</div>
+	);
+};
+
+const Login = () => {
+	const [login, { loading, error }] = useLazyLogin();
+	const [logout] = useLazyLogout();
+	const isAuthenticated = useAuthenticated();
+	return (
+		<div>
+			<ProxyLogin />
+			{!isAuthenticated && (
+				<div>
+					<button
+						onClick={() =>
+							login({
+								username: 'user1',
+								password: '123456',
+								client_id:
+									'5e6c8415-9a1f-4d8b-9249-72b9dc6f7494',
+								client_secret: 'client_secret_simple_oauth',
+								grant_type: 'password',
+								scope: 'consumer',
+							})
+						}
+					>
+						Correct Login
+					</button>
+					<button
+						onClick={() =>
+							login({
+								username: 'user1',
+								password: '123456789',
+								client_id:
+									'5e6c8415-9a1f-4d8b-9249-72b9dc6f7494',
+								client_secret: 'client_secret_simple_oauth',
+								grant_type: 'password',
+								scope: 'consumer',
+							})
+						}
+					>
+						Incorrect Login
+					</button>
+				</div>
 			)}
 			{loading && <p>Loading...</p>}
 			{error && <p>Error: {error.message}</p>}
